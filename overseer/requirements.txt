@@ -1,0 +1,8 @@
+tornado
+docker
+sockjs-tornado
+pyzmq
+boto3
+egenix-mx-base
+requests
+ruamel.yaml

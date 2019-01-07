@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Run a new image
+#
+source conf/defaults
+source conf/MODULE
+source conf/$MODULE
+
+VER=${1:-latest}
+
+docker run \
+    -td \
+    --name jet-${MODULE} \
+    ${RN_VOLUMES} \
+    --net=host \
+    $RN_PORTS \
+    jet-$MODULE:$VER

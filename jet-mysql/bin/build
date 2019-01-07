@@ -1,0 +1,29 @@
+#!/bin/bash
+#######################################################
+#
+# Called to build a machine specific MySQL config.
+#
+# ./jet-mysql/bin/build <client> <verno>
+#
+# ./jet-mysql/bin/build infosat 0.22
+#
+#######################################################
+
+CLIENT=$1
+VER=$2
+
+source conf/MODULE
+source conf/defaults
+source conf/$MODULE
+source conf/build
+
+PROXY="--build-arg HTTP_PROXY=${HTTP_PROXY} --build-arg HTTPS_PROXY=${HTTPS_PROXY}"
+BARGS=""
+OARGS="--build-arg CLIENT=$CLIENT --build-arg MACHINE=$MACHINE --build-arg TIMEZONE=$TIMEZONE"
+
+ARGS="${BARGS} ${OARGS} ${PROXY} ${EXARGS}"
+
+CMD="docker build --rm -t jet-${MODULE}:latest -t jet-${MODULE}:${VER} ${ARGS} ."
+
+exec $CMD
+

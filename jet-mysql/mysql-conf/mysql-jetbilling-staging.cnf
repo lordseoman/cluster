@@ -1,0 +1,9 @@
+#
+# This mysql config file specifies host level settings
+#
+[mysqld]
+bind_address            = 172.16.129.37
+report-host             = staging.jetbilling.com
+
+server-id               = 20
+auto_increment_offset   = 1

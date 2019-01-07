@@ -1,0 +1,12 @@
+--- /var/awslogs/lib/python2.7/site-packages/cwlogs/push.py.orig 2018-10-29 14:48:25.169102141 +1100
++++ /var/awslogs/lib/python2.7/site-packages/cwlogs/push.py      2018-10-29 14:50:02.848067436 +1100
+@@ -1316,7 +1316,8 @@
+ 
+         if batch_skipped:
+             next_token = sequence_token
+-        else:
++        # Don't log our own changes as this causes a loop when watching our logs
++        elif not self.log_stream_name.startswith('awslogs.'):
+             publisher_logger.info('Log group: %s, log stream: %s, '
+                                   'queue size: %d, Publish batch: %s',
+                                   self.log_group_name, self.log_stream_name,

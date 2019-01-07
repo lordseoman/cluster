@@ -1,0 +1,100 @@
+{
+    "taskDefinition": {
+        "status": "ACTIVE", 
+        "memory": "4096", 
+        "networkMode": "bridge", 
+        "family": "jet-mysql", 
+        "placementConstraints": [
+            {
+                "expression": "attribute:obsidian.instance-type == database", 
+                "type": "memberOf"
+            }, 
+            {
+                "expression": "attribute:obsidian.subnet-type == private", 
+                "type": "memberOf"
+            }
+        ], 
+        "requiresAttributes": [
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.17"
+            }, 
+            {
+                "name": "ecs.capability.execution-role-ecr-pull"
+            }, 
+            {
+                "name": "com.amazonaws.ecs.capability.ecr-auth"
+            }, 
+            {
+                "name": "com.amazonaws.ecs.capability.task-iam-role"
+            }, 
+            {
+                "name": "ecs.capability.execution-role-awslogs"
+            }, 
+            {
+                "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+            }, 
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+            }
+        ], 
+        "cpu": "1024", 
+        "executionRoleArn": "arn:aws:iam::918070721808:role/ecsTaskExecutionRole", 
+        "compatibilities": [
+            "EC2"
+        ], 
+        "volumes": [
+            {
+                "host": {
+                    "sourcePath": "/Database"
+                }, 
+                "name": "database"
+            }
+        ], 
+        "requiresCompatibilities": [
+            "EC2"
+        ], 
+        "taskRoleArn": "arn:aws:iam::918070721808:role/ecsTaskExecutionRole", 
+        "taskDefinitionArn": "arn:aws:ecs:us-east-1:918070721808:task-definition/jet-mysql:10", 
+        "containerDefinitions": [
+            {
+                "environment": [], 
+                "name": "jetdb", 
+                "workingDirectory": "/root", 
+                "mountPoints": [
+                    {
+                        "sourceVolume": "database", 
+                        "containerPath": "/opt/Database"
+                    }
+                ], 
+                "image": "918070721808.dkr.ecr.ap-southeast-2.amazonaws.com/jet-mysql:latest", 
+                "hostname": "db", 
+                "cpu": 1024, 
+                "portMappings": [
+                    {
+                        "protocol": "tcp", 
+                        "containerPort": 3306, 
+                        "hostPort": 3306
+                    }, 
+                    {
+                        "protocol": "tcp", 
+                        "containerPort": 9001, 
+                        "hostPort": 9001
+                    }
+                ], 
+                "entryPoint": [], 
+                "logConfiguration": {
+                    "logDriver": "awslogs", 
+                    "options": {
+                        "awslogs-region": "us-east-1", 
+                        "awslogs-stream-prefix": "ecs", 
+                        "awslogs-group": "/ecs/jet-mysql"
+                    }
+                }, 
+                "command": [], 
+                "essential": true, 
+                "volumesFrom": []
+            }
+        ], 
+        "revision": 10
+    }
+}

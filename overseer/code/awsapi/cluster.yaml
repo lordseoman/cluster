@@ -1,0 +1,91 @@
+version: "1.0"
+
+cluster:
+    name: Jet-Cluster
+    namespace: local
+    region: us-east-1
+
+    tasks:
+        jetdb:
+            task_definition: jet-mysql
+            container_name: jetdb
+            hostname: db
+            description: Database for the Jet-Cluster
+            mode: replica
+            command: start
+            environment: {}
+            depends_on: []
+
+        filetracker:
+            task_definition: jet-filetracker
+            container_name: filetracker
+            hostname: filetracker
+            description: Tracks files being imported
+            command: filetracker
+            mode: scalar
+            environment:
+                num_workers: 6
+                db_dir: /opt/ramdisk/db
+            depends_on: []
+
+        fsmonitor:
+            task_definition: jet-fsmonitor
+            container_name: fsmonitor
+            hostname: fsmonitor
+            description: Monitors a directory for new files to import
+            command: fsmonitor
+            mode: loner
+            environment:
+                directory: /opt/Usage/work/incoming
+                recursive: True
+            depends_on:
+                - filetracker
+
+        filereader:
+            task_definition: jet-filereader
+            container_name: filereader
+            hostname: filereader
+            description: Reads in import files
+            command: filereader
+            mode: clone
+            environment:
+                num_workers: 2
+                records_ip: storage.local
+                records_port: 12590
+                realm: "%(realm)s"
+                collector_class: modules.netflowv9.collector.NetflowV9Collector
+                work_dir: /opt/Usage/work
+            depends_on:
+                - filetracker
+                - storage
+
+        storage:
+            task_definition: jet-storage
+            container_name: storage
+            hostname: storage
+            description: Stores usage records for billing and reports
+            command: storage
+            mode: scalar
+            environment:
+                realm: "%(realm)s"
+                num_workers: 4
+            depends_on:
+                - filetracker
+
+    tasksets:
+        main:
+            required: True
+            depends_on: []
+            tasks:
+                - jetdb
+
+        imports:
+            required: False
+            depends_on: 
+                - main
+            tasks:
+                - filetracker
+                - fsmonitor
+                - filereader
+                - storage
+

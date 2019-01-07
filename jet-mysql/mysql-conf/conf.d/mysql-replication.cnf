@@ -1,0 +1,40 @@
+[mysqld]
+datadir     = /opt/mysql/data
+
+skip-slave-start
+
+# Log updates from the slave in our binlog so that slaves of us
+# get propagated the sql events
+
+log-slave-updates
+
+# Don't perform sql that appears in the slave log that originated
+# from this server id, when cyclic slaves are done this prevents
+# queries from getting done twice
+
+replicate-same-server-id        = 0
+
+# Increment the AUTO_INCREMENT fields by 2 - assumes Master-Master
+auto-increment-increment        = 2
+
+# Starting value for AUTO_INCREMENT value when starting.
+# Define this in the mysql-<realm.cnf file.
+# auto-increment-offset         = 1
+
+slave_transaction_retries       = 30
+
+# Define these in the mysql-<realm.cnf file.
+# replicate-do-db         = <db>
+# replicate-ignore-table  = <db>.memory_session
+# replicate-ignore-table  = <db>.memory_usage_u
+
+log_bin                 = /opt/mysql/binlogs/mysql-bin.log
+binlog_do_db            = 
+binlog_cache_size       = 16M
+
+relay-log               = /opt/mysql/binlogs/slave-relay.log
+relay-log-index         = /opt/mysql/binlogs/slave-relay-log.index
+relay-log-info-file     = /opt/mysql/binlogs/slave-relay-log.info
+
+expire_logs_days        = 10
+max_binlog_size         = 1G

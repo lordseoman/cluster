@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker-compose -f docker-compose-griffith.yml build
+docker-compose -f docker-compose-griffith.yml up -d --scale jetdb=3

@@ -1,0 +1,10 @@
+#
+# This mysql config file specifies host level settings
+#
+[mysqld]
+bind_address            = %(HOST_IP)s
+report-host             = %(HOSTNAME)s
+
+server-id               = %(SERVER_ID)s
+auto_increment_offset   = %(AUTO_INCREMENT_OFFSET)s
+

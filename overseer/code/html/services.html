@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{ title }}</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript">
+      <!--
+      $(document).ready(function() {
+        getServices();
+      });
+      function getServices() {
+        var cb = document.getElementById('showall');
+        var dataOb = {};
+        if (cb.checked == true) {
+          dataOb.status = 'all';
+        }
+        $.ajax({ 
+          type: 'GET', 
+          url: '/services/list', 
+          data: dataOb, 
+          dataType: 'json',
+          success: function (data) { 
+            var loc = $('#services > tbody');
+            $('#services > tbody > tr').remove(); 
+            $.each(data['services'], function(index, element) {
+              if ( index % 2 === 0 ) {
+                var cls='data';
+              } else {
+                var cls='datahi';
+              }
+              loc.append('<tr class="' + cls  + '">'+
+                '<td class="taskid">'+element['TaskId']+'</td>'+
+                '<td>'+element['ServiceName']+'</td>'+
+                '<td>'+element['CurrentStatus']+'</td>'+
+                '<td>'+element['ContainerName']+'</td>'+
+                '<td>'+element['Hostname']+'</td>'+
+                '<td>'+element['IP']+'</td>'+
+                '<td>'+element['Port']+'</td>'+
+                '<td><input type="button" value="Delete" onclick="deleteme(this);"></td>'+
+              '</tr>');
+            });
+          }
+        });
+      };
+      function deleteme(source) {
+        var taskid = source.parentNode.parentNode.firstChild.firstChild.data;
+        console.log("Delete clicked on: " + taskid);
+      };
+      -->
+    </script>
+    <link rel="stylesheet" href="/static/css/style.css" type="text/css" />
+  </head>
+  <body>
+    <span><input type="checkbox" id="showall"><p>Show hidden services.</p></span>
+    <div><input type="button" value="Refresh" onclick="getServices();"></div>
+    <table class="data" id="services">
+      <thead>
+        <td>TaskId</td>
+        <td>Service</td>
+        <td>Status</td>
+        <td>Container</td>
+        <td>Hostname</td>
+        <td>IP</td>
+        <td>Port</td>
+        <td>Action</td>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </body>
+</html>

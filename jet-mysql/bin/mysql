@@ -1,0 +1,5 @@
+#!/bin/bash
+
+source conf/MODULE
+docker exec -it jet-${MODULE} mysql -uroot -p
+

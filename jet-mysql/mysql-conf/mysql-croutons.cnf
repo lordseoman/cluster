@@ -1,0 +1,12 @@
+#
+# This mysql config file specifies replication realm level settings
+#
+[mysqld]
+
+# Databases to replicate are client specific
+replicate-do-db         = croutons
+replicate-ignore-table  = croutons.memory_session
+replicate-ignore-table  = croutons.memory_usage_u
+
+# We only want binary logs for the client database
+binlog_do_db            = croutons

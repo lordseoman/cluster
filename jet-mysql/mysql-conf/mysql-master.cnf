@@ -1,0 +1,5 @@
+[mysqld]
+replicate-do-db         = master
+replicate-ignore-table  = master.memory_session
+replicate-ignore-table  = master.memory_usage_u
+binlog_do_db            = master

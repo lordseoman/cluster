@@ -1,0 +1,28 @@
+#!/bin/bash
+yum update -y
+yum install -y aws-cli vim lynx tcpdump bind-utils jq
+region=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
+export AWS_DEFAULT_REGION=$region
+echo "export AWS_DEFAULT_REGION=$region" >> /etc/profile.d/aws-cli.sh
+yum install -y https://amazon-ssm-$region.s3.amazonaws.com/latest/linux_amd64/amazon-ssm-agent.rpm
+
+instId=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document  | jq -r .instanceId)
+p1="Name=resource-type,Values=instance"
+p2="Name=resource-id,Values=${instId}"
+cluster=$(aws ec2 describe-tags --filters "${p1}" "${p2}" "Name=key,Values=Cluster-Name" | jq -r '.Tags[].Value')
+
+cat <<EOT >> /etc/ecs/ecs.config
+AWS_DEFAULT_REGION=$region
+ECS_CLUSTER=$cluster
+EOT
+
+# Run the setup script
+aws s3 sync s3://obsidian-s3/aws/root/ /root/ --no-progress
+chmod 755 /root/bin/*
+/root/bin/ec2-instance-script-base.sh
+
+# Setup the container update script
+sudo -u ec2-user aws s3 sync s3://obsidian-s3/aws/home/ /home/ec2-user/ --no-progress
+chmod 755 /home/ec2-user/bin/*
+sudo -u ec2-user /home/ec2-user/bin/update.sh
+

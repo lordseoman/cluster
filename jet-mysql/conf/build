@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# Configuration for building an image
+#
+source conf/mysql.env
+
+EXARGS="--build-arg MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD"
+EXARGS="$EXARGS --build-arg MYSQL_JET_USERNAME=$MYSQL_JET_USERNAME"
+EXARGS="$EXARGS --build-arg MYSQL_JET_PASSWORD=$MYSQL_JET_PASSWORD"
+
+if [ "x$DATABASE" != "x" ]; then
+    EXARGS="$EXARGS --build-arg DATABASE=$DATABASE"
+fi
+
+if [ "x$AWS_LOGS_ENABLE" == "x" ]; then
+    EXARGS="$EXARGS --build-arg AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID"
+    EXARGS="$EXARGS --build-arg AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
+    EXARGS="$EXARGS --build-arg AWS_OUTPUT=$AWS_OUTPUT"
+    EXARGS="$EXARGS --build-arg AWS_REGION=$AWS_REGION"
+fi
+

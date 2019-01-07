@@ -1,0 +1,75 @@
+version: "3"
+
+services:
+  dynamodb:
+    image: amazon/dynamodb-local:latest
+    hostname: dynamodb
+    ports:
+      - "8000:8000"
+
+  overseer:
+    image: overseer
+    build: ./overseer
+    hostname: overseer
+    command: all
+    ports:
+      - "3000:3000"
+      - "13001:13001"
+      - "13002:13002"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/docker/patches:/opt/patches
+    labels:
+      - overseer
+    environment:
+      - AWS_DYNAMODB_ENDPOINT=http://dynamodb:8000
+      - AWS_ACCESS_KEY_ID=u97263f29o73f2
+      - AWS_SECRET_ACCESS_KEY=oiybqp23487grp
+      - AWS_REGION=us-east-1
+    depends_on:
+      - dynamodb
+
+  jetdb:
+    image: jet-mysql:latest
+    build: ./jet-mysql
+    hostname: jetdb
+    volumes:
+      - /opt/docker/Database:/opt/Database
+      - /opt/docker/patches:/opt/patches
+    ports:
+      - 3306
+      - 9001
+    environment:
+      - DATABASE=
+      - MYSQL_ROOT_PASSWORD=g0a3aY
+      - MYSQL_JET_USERNAME=jetdb
+      - MYSQL_JET_PASSWORD=n0secr3t
+      - SERVICE_NAME=jetdb
+      - AWS_LOGS_ENABLE=
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
+      - AWS_OUTPUT=text
+      - AWS_REGION=us-east-1      
+
+  filetracker-db:
+    image: filetracker-db:latest
+    build: ./filetracker-db
+    hostname: filetracker-db
+    environment:
+      - REDIS_PASSWORD=mys3cr3t
+      - ALLOW_EMPTY_PASSWORD=no
+    ports:
+      - 6379
+
+  filetracker:
+    image: jet-processor:latest
+    command: filetracker
+    hostname: filetracker
+    volumes:
+      - /opt/docker/jet:/home/jet/Jet
+      - /opt/docker/patches:/opt/patches
+    ports:
+      - "12610:12610"
+    depends_on:
+      - filetracker-db
+

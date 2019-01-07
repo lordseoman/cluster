@@ -1,0 +1,41 @@
+[mysqld]
+#
+# * Fine Tuning
+key_buffer_size         = 768M
+max_allowed_packet      = 32M
+thread_stack            = 131072
+thread_cache_size       = 20
+max_connections         = 100
+table_open_cache        = 768
+max_heap_table_size     = 2048M
+tmp_table_size          = 2048M
+connect_timeout         = 14400
+wait_timeout            = 14400
+sort_buffer_size        = 768M
+read_buffer_size        = 768M
+read_rnd_buffer_size 	= 768M
+join_buffer_size	= 768M
+open_files_limit        = 4096
+#
+# * Query Cache Configuration
+query_cache_type        = 1
+query_cache_limit       = 8M
+query_cache_size        = 128M
+#
+# Here you can see queries with especially long duration
+slow_query_log		= 1
+slow_query_log_file    	= /opt/mysql/logs/mysql-slow.log
+long_query_time     	= 10
+#log-queries-not-using-indexes
+#
+log-error	    	= /opt/mysql/logs/mysql.err
+#
+# When creating a table it should be InnoDB.
+default-storage_engine	= InnoDB
+#
+# INNODB tables should use per file
+innodb_file_per_table
+#
+# tune this dependant on the system memory pool
+innodb_buffer_pool_size = 5120M
+innodb_log_buffer_size  = 1M

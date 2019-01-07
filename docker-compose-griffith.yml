@@ -1,0 +1,56 @@
+version: '3.4'
+
+services:
+  dynamodb:
+    image: amazon/dynamodb-local:latest
+    hostname: dynamodb
+    ports:
+      - "8000:8000"
+
+  overseer:
+    image: overseer:latest
+    build: ./overseer
+    hostname: overseer
+    command: all
+    ports:
+      - "3000:3000"
+      - "13001:13001"
+      - "13002:13002"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/docker/patches:/opt/patches
+    labels:
+      - overseer
+    environment:
+      - AWS_DYNAMODB_ENDPOINT=http://dynamodb:8000
+      - AWS_ACCESS_KEY_ID=u97263f29o73f2
+      - AWS_SECRET_ACCESS_KEY=oiybqp23487grp
+      - AWS_REGION=us-east-1
+      - SERVICE_NAME=overseer
+    depends_on:
+      - dynamodb
+
+  jetdb:
+    image: jet-mysql:latest
+    hostname: jetdb
+    command: mysql
+    environment:
+      - DATABASE=
+      - MYSQL_ROOT_PASSWORD=g0a3aY
+      - MYSQL_JET_USERNAME=jetdb
+      - MYSQL_JET_PASSWORD=n0secr3t
+      - SERVICE_NAME=jetdb
+      - AWS_LOGS_ENABLE=
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
+      - AWS_OUTPUT=text
+      - AWS_REGION=us-east-1
+    volumes:
+      - /opt/docker/Database:/opt/Database
+      - /opt/docker/patches:/opt/patches
+    ports:
+      - 3306
+      - 9001
+    depends_on:
+      - overseer
+

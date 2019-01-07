@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+  overseer:
+    image: overseer
+    build: ./overseer
+    ports:
+      - 3000:3000
+      - 13001:13001
+      - 13002:13002
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - overseer
+  redis:
+    image: redis
+    build: ./redis
+    command: --cluster-enabled yes --bind 0.0.0.0 --loglevel warning
+    ports:
+      - 6379
+      - 16379
+    labels:
+      - redis
+    depends_on:
+      - overseer

@@ -1,0 +1,55 @@
+#!/bin/bash
+
+name=$1
+user='jet'
+
+if [ "x$name" == "x" ]; then
+    all=$(docker ps -f name=-jet- --format "{{.ID}}:{{.Names}}")
+    IFS=' ' read -a myarray <<< $all
+    if [ ${#myarray[@]} -eq 1 ]; then
+        IFS=':' read -a conts <<< ${myarray[0]}
+        echo "only 1: ${conts[1]}"
+        contid=${conts[0]}
+    elif [ ${#myarray[@]} -gt 1 ]; then
+        for x in ${myarray[@]}; do
+            IFS=':' read -a conts <<< $x
+            IFS="-" read -a parts <<< ${conts[1]} 
+            echo "ContainerName: ${parts[2]}"
+        done
+        exit 0
+    else
+        echo "No containers."
+        exit 1
+    fi
+elif [ "$name" == "root" ]; then
+    user='root'
+    IFS=' ' read -a contids <<< $(docker ps -q -f name=-jet-)
+    if [ ${#contids[@]} -ne 1 ];then
+        echo "You need to specify the container name."
+        exit 1
+    else
+        contid=${contids[0]}
+    fi
+elif [ "$name" == "list" ]; then
+    all=$(docker ps -f name=-jet- --format "{{.ID}}:{{.Names}}")
+    IFS=' ' read -a myarray <<< $all
+    for x in ${myarray[@]}; do
+        IFS=':' read -a conts <<< $x
+        IFS="-" read -a parts <<< ${conts[1]}
+        echo "ContainerName: ${parts[1]}"
+    done
+    exit 0
+else
+    IFS=' ' read -a contids <<< $(docker ps -q -f name=-jet-${name})
+    if [ ${#contids[@]} -ne 1 ];then
+        echo "Container missing or too vague."
+        exit 1
+    else
+        contid=${contids[0]}
+    fi
+    if [ $# -gt 1 ]; then
+        user=$2
+    fi
+fi
+
+docker exec -it --user $user $contid /bin/bash

@@ -1,0 +1,387 @@
+{
+    "services": [
+        {
+            "status": "ACTIVE", 
+            "serviceRegistries": [
+                {
+                    "containerName": "jetdb", 
+                    "registryArn": "arn:aws:servicediscovery:us-east-1:918070721808:service/srv-6xzo6digdkswks5i", 
+                    "containerPort": 3306
+                }
+            ], 
+            "pendingCount": 0, 
+            "launchType": "EC2", 
+            "schedulingStrategy": "REPLICA", 
+            "loadBalancers": [], 
+            "roleArn": "arn:aws:iam::918070721808:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS", 
+            "placementConstraints": [], 
+            "createdAt": 1540799960.072, 
+            "desiredCount": 0, 
+            "serviceName": "db", 
+            "clusterArn": "arn:aws:ecs:us-east-1:918070721808:cluster/Jet-Cluster", 
+            "taskDefinition": "arn:aws:ecs:us-east-1:918070721808:task-definition/jet-mysql:9", 
+            "serviceArn": "arn:aws:ecs:us-east-1:918070721808:service/db", 
+            "deploymentConfiguration": {
+                "maximumPercent": 200, 
+                "minimumHealthyPercent": 100
+            }, 
+            "deployments": [
+                {
+                    "status": "PRIMARY", 
+                    "pendingCount": 0, 
+                    "launchType": "EC2", 
+                    "createdAt": 1540948056.023, 
+                    "desiredCount": 0, 
+                    "taskDefinition": "arn:aws:ecs:us-east-1:918070721808:task-definition/jet-mysql:9", 
+                    "updatedAt": 1541683857.289, 
+                    "id": "ecs-svc/9223370495906719783", 
+                    "runningCount": 0
+                }
+            ], 
+            "events": [
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "b61e2bb8-8058-4513-9893-a34c0e3574ca", 
+                    "createdAt": 1541705471.696
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "94b55c73-24e1-4d44-91a3-842a87362415", 
+                    "createdAt": 1541683857.295
+                }, 
+                {
+                    "message": "(service db) has stopped 1 running tasks: (task b1cc7d5e-81f1-46e8-9a3b-317ced4b3a7e).", 
+                    "id": "630d75cd-79ab-4e2e-8092-946e0b500b2f", 
+                    "createdAt": 1541683847.491
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "44deb51f-5be1-4248-bc6d-423ebf41ca0d", 
+                    "createdAt": 1541662545.481
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "08f4c944-8253-4b22-8fd0-6342465e5e9e", 
+                    "createdAt": 1541640943.951
+                }, 
+                {
+                    "message": "(service db) has started 1 tasks: (task b1cc7d5e-81f1-46e8-9a3b-317ced4b3a7e).", 
+                    "id": "d43bfc8d-8c15-4466-8e00-15101c99b23c", 
+                    "createdAt": 1541640853.34
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "4f10aca3-7897-4c1b-a39f-5ad1782c420d", 
+                    "createdAt": 1541638416.233
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "4164442b-9a9c-4984-8fb2-170397afd8f2", 
+                    "createdAt": 1541616814.524
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "71e8966b-af79-4de8-9bd7-993150ae9e65", 
+                    "createdAt": 1541595196.576
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "3616c00b-006e-4443-82da-b1e0c55588d8", 
+                    "createdAt": 1541573569.475
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "8282aac8-a4d3-454a-859d-318b6133556a", 
+                    "createdAt": 1541551946.709
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "9ad22d98-6a2a-45c5-b94b-5bad8c0a126a", 
+                    "createdAt": 1541530319.237
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "69824f49-917a-4153-865d-eecbbe853e3a", 
+                    "createdAt": 1541508710.733
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "0ff810d6-685c-4593-b1ae-f5e3ea7e91c0", 
+                    "createdAt": 1541487096.95
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "f80b853c-961e-43e4-9e54-3a289cba535d", 
+                    "createdAt": 1541465495.553
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "cd8f6616-57d0-438d-a203-ffec9dbbcde1", 
+                    "createdAt": 1541443884.639
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "ca78e07a-e658-4242-ac07-d5391ba1c285", 
+                    "createdAt": 1541422265.596
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "afd0ba82-449b-41fe-898e-8f003c2d9da6", 
+                    "createdAt": 1541400639.509
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "0a28f1b6-2e9f-410d-a879-f9bcfe28b563", 
+                    "createdAt": 1541379028.453
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "03826ec6-24b8-48b8-83e2-9e7aa9c02c8b", 
+                    "createdAt": 1541357411.291
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "f258a212-8649-4967-ba17-0558aa5cca96", 
+                    "createdAt": 1541335797.664
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "a812cff7-7eb2-4377-becc-994c2f43c04a", 
+                    "createdAt": 1541314167.238
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "15ccd05b-b191-44d0-9783-1851fa164ce0", 
+                    "createdAt": 1541292547.611
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "0b104970-1a36-4ba3-b1ef-f330872ce33c", 
+                    "createdAt": 1541270946.73
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "6f5ee1a6-de38-4f2f-8962-2d5ec53aeb09", 
+                    "createdAt": 1541249321.047
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "33062028-c712-4fa8-96bc-6afbce5cf5c0", 
+                    "createdAt": 1541227714.371
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "dc25f70b-83c8-4150-8259-5b16cf95ec09", 
+                    "createdAt": 1541206089.516
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "13bd89dd-0e5f-47d6-97f2-c3f02d46fcb8", 
+                    "createdAt": 1541184463.595
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "d92954ae-592b-4039-a232-207ff021c256", 
+                    "createdAt": 1541162838.717
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "bdfec342-33c0-494d-ae60-f759c0c7fe11", 
+                    "createdAt": 1541141238.49
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "56901efe-b039-4c01-bced-97903a9250f9", 
+                    "createdAt": 1541119611.07
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "2abac57c-b35e-4320-bd0e-9c9a6e66f96b", 
+                    "createdAt": 1541097993.241
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "6f5a0616-8db7-4580-b8da-96d9ed2c36d0", 
+                    "createdAt": 1541076378.64
+                }, 
+                {
+                    "message": "(service db) stopped 1 pending tasks.", 
+                    "id": "479e221b-adbe-48c8-a0df-c48f2c52a81f", 
+                    "createdAt": 1541076368.745
+                }, 
+                {
+                    "message": "(service db) has started 1 tasks: (task e55fedcf-2bfc-48a1-9cbf-d8587e76fb78).", 
+                    "id": "a800202f-58a1-4890-8d36-09d05d007694", 
+                    "createdAt": 1541076333.789
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "73894614-747c-4279-909d-094d9e369ae1", 
+                    "createdAt": 1541057158.195
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "0b826a59-9884-4fe8-bbea-6cfe95aa5658", 
+                    "createdAt": 1541035532.787
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "c8a253f7-70ee-4844-8e0e-12847d5e9824", 
+                    "createdAt": 1541013921.205
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "77f384e7-71ff-4ed6-bb25-a85f2af38e84", 
+                    "createdAt": 1540992320.492
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "f3a812af-48a1-4c1a-92b8-4b77f907a702", 
+                    "createdAt": 1540970700.583
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "6026c195-76a7-433b-b1cd-02d1676d6ad5", 
+                    "createdAt": 1540949070.917
+                }, 
+                {
+                    "message": "(service db) has started 1 tasks: (task edcfb00d-deb2-4c48-94e1-1eb210703716).", 
+                    "id": "1494a544-bbac-4a97-8390-551cece28e34", 
+                    "createdAt": 1540948063.91
+                }, 
+                {
+                    "message": "(service db) was unable to place a task because no container instance met all of its requirements. The closest matching (container-instance fabdeb0c-423d-4683-8df0-37e2b2f97bc0) is already using a port required by your task. For more information, see the Troubleshooting section of the Amazon ECS Developer Guide.", 
+                    "id": "8609fe65-7b62-4c0b-a001-dcb6d1b33357", 
+                    "createdAt": 1540947933.693
+                }, 
+                {
+                    "message": "(service db) has started 1 tasks: (task 2f498b70-d6c2-4be5-9100-7bb8966b01a7).", 
+                    "id": "9a13ab25-0b15-4b66-86b7-a958a1f658ce", 
+                    "createdAt": 1540947313.246
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "8874b4ad-7380-47c3-9f75-a9b4c28edc29", 
+                    "createdAt": 1540945097.376
+                }, 
+                {
+                    "message": "(service db) has stopped 1 running tasks: (task 1e1488ec-c40e-477b-9d0b-745f646e685a).", 
+                    "id": "45613979-3a10-468e-bdf9-e7b9d5284f51", 
+                    "createdAt": 1540945086.598
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "d9d3e7cc-d9cd-4cd4-8145-9539862b48eb", 
+                    "createdAt": 1540926067.887
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "e987d924-03d0-4223-8d74-8e7dd1dab82a", 
+                    "createdAt": 1540904447.14
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "d17339a8-2e88-44ad-ae4e-0cebac334a39", 
+                    "createdAt": 1540882839.242
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "447014e4-b70a-405d-a2e5-7e9beab30554", 
+                    "createdAt": 1540861218.409
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "c15071f7-0956-4379-b281-0181be987d73", 
+                    "createdAt": 1540839603.611
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "78bd3ff7-c71f-464d-a59f-0be9f33daebe", 
+                    "createdAt": 1540817994.266
+                }, 
+                {
+                    "message": "(service db) has started 1 tasks: (task 1e1488ec-c40e-477b-9d0b-745f646e685a).", 
+                    "id": "449db294-de06-4b21-8f57-bd1447085dc2", 
+                    "createdAt": 1540817934.573
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "d68aa03c-1743-49ea-b8cf-1a63d35da4b0", 
+                    "createdAt": 1540817872.222
+                }, 
+                {
+                    "message": "(service db) has stopped 1 running tasks: (task f83fdbad-41c3-4ea7-a8df-f67ae77a10df).", 
+                    "id": "985d57ee-57e4-4beb-9f61-93601656abc5", 
+                    "createdAt": 1540817859.842
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "2b5c7b2e-c896-4d0a-915d-0f4af9055361", 
+                    "createdAt": 1540817413.703
+                }, 
+                {
+                    "message": "(service db) has started 1 tasks: (task f83fdbad-41c3-4ea7-a8df-f67ae77a10df).", 
+                    "id": "e2f52b13-80a8-4c69-aaa7-ee63825534eb", 
+                    "createdAt": 1540817363.383
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "f5de3cee-3d0a-40d4-bd34-0f5954e744bc", 
+                    "createdAt": 1540817239.198
+                }, 
+                {
+                    "message": "(service db) has stopped 1 running tasks: (task f21b8ddc-79e9-4ee0-b110-6ed2646901bc).", 
+                    "id": "d0f43cfb-3ea3-4434-afe5-682689c9a5e8", 
+                    "createdAt": 1540817229.04
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "abeff415-d073-4655-b6df-6d7e241f4af0", 
+                    "createdAt": 1540801299.474
+                }, 
+                {
+                    "message": "(service db) has started 1 tasks: (task f21b8ddc-79e9-4ee0-b110-6ed2646901bc).", 
+                    "id": "4aa97127-6e5e-41d2-ab8d-c107694b7ae3", 
+                    "createdAt": 1540801268.101
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "bc10bf8c-05fa-411d-b8d7-70f574ef3ae4", 
+                    "createdAt": 1540801214.739
+                }, 
+                {
+                    "message": "(service db) has stopped 1 running tasks: (task 5d404852-dfa9-47bf-af7b-68384ae8ac38).", 
+                    "id": "120b3d2e-8e73-47bf-b39d-85bc122afe5b", 
+                    "createdAt": 1540801173.486
+                }, 
+                {
+                    "message": "(service db) was unable to place a task because no container instance met all of its requirements. The closest matching (container-instance d073535e-cda3-45cc-a407-af5441d0033e) has insufficient memory available. For more information, see the Troubleshooting section of the Amazon ECS Developer Guide.", 
+                    "id": "7b90cd05-e8b3-4799-8dd3-8092fb76f7b7", 
+                    "createdAt": 1540800848.676
+                }, 
+                {
+                    "message": "(service db) has reached a steady state.", 
+                    "id": "b0412a4f-d69f-44e9-bb64-2847185c74dd", 
+                    "createdAt": 1540800039.449
+                }, 
+                {
+                    "message": "(service db) has started 1 tasks: (task 5d404852-dfa9-47bf-af7b-68384ae8ac38).", 
+                    "id": "949c253b-019a-42c4-ac5b-be57d7b00c68", 
+                    "createdAt": 1540799970.11
+                }
+            ], 
+            "runningCount": 0, 
+            "placementStrategy": [
+                {
+                    "field": "attribute:ecs.availability-zone", 
+                    "type": "spread"
+                }, 
+                {
+                    "field": "instanceId", 
+                    "type": "spread"
+                }
+            ]
+        }
+    ], 
+    "failures": []
+}

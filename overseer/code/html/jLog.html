@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script type="text/javascript" src="http://cdn.sockjs.org/sockjs-0.3.1.min.js"></script>
+        <style type="text/css">
+            input[type="text"] { width: 300px; }
+        </style>
+        <script type="text/javascript">
+            'use strict';
+            var connection;
+            $(function() {
+                function message(text) { $('#messages').prepend($('<li/>').text(text)); } 
+
+                function connect() {
+                    connection = new SockJS('http://' + window.location.host + '/jLog');
+                    connection.onopen = function() {
+                        message('Connecting?');
+                    };
+                    connection.onclose = function() {
+                        message('Connection closed.');
+                        window.setTimeout(connect, 3000);
+                    };
+                    connection.onmessage = function(event) {
+                        message(event.data);
+                    };
+                }
+                
+                connect();
+            });
+        </script>
+    </head>
+    <body>
+        <ul id="messages"></ul>
+    </body>
+</html>

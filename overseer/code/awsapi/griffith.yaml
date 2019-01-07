@@ -1,0 +1,58 @@
+version: "1.0"
+cluster:
+    name: Jet-Cluster
+    namespace: local
+    region: us-east-1
+
+    tasks:
+        jetdb:
+            task_definition: jet-mysql
+            container_name: jetdb
+            hostname: db
+            description: Database for the Jet-Cluster
+            command: mysql
+            count: 3
+            environment: 
+                DATABASE: "%(realm)s-%(num)s"
+                SERVICE_NAME: "%(name)s"
+                SERVICE_NUMBER: "%(num)s"
+                MYSQL_ROOT_PASSWORD: "%(frank)s"
+                MYSQL_JET_PASSWORD: "%(ernie)s"
+            depends_on: 
+                - overseer
+
+        processor:
+            task_definition: jet-processor
+            container_name: processor
+            hostname: processor
+            description: Processor to run a fixed set of imports
+            command: ""
+            count: 3
+            environment:
+                SERVICE_NAME: "%(name)s"
+                SERVICE_NUMBER: "%(num)s"
+                JETOPT_REALM: "%(realm)s"
+                JETOPT_WORK_DIR: "/opt/Usage/%(realm)s-%(num)s"
+                PROCESS_DATE: "%(processDate)s"
+            depends_on: 
+                - jetdb
+
+        overseer:
+            task_definition: jet-overseer
+            container_name: overseer
+            hostname: overseer
+            description: Monitors and Manages containers running on the host
+            command: start
+            count: 1
+            environment: {}
+            depends_on: []
+
+templates:
+    ec2:
+        GriffithProcessor:
+            instance_type: c5.4xlarge
+            subnet: private
+            tags:
+                Instance-Type: GriffithProcessor
+                ProcessDate: "%%Y%%m%%d"
+

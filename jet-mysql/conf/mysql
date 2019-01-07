@@ -1,0 +1,4 @@
+#!/bin/bash
+
+RN_VOLUMES='-v /Database:/opt/Database'
+RN_PORTS='-p 3306:3306 -p 9001:9001'

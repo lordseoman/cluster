@@ -1,0 +1,5 @@
+requests
+requests_toolbelt 
+requests-oauthlib
+python-dotenv
+netifaces
