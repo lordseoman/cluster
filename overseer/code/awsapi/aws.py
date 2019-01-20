@@ -6,6 +6,7 @@ import boto3
 import os
 import time
 from pprint import pprint
+from botocore import exceptions
 
 import common
 from cluster import Cluster
@@ -330,7 +331,7 @@ class EC2Instance(object):
         response = self.aws.ec2c.describe_instances(InstanceIds=[self.id,])
         if response['Reservations'][0]['Instances']:
             self.data = response['Reservations'][0]['Instances'][0]
-            print "Instance data loaded: %s" % self.id
+            #print "Instance data loaded: %s" % self.id
         else:
             print "Failed to load instance data: %s" % self.id
         self.__volumes = None
@@ -397,8 +398,11 @@ class EC2Instance(object):
             if wait and state['Name'] == 'pending':
                 print "Waiting for instance to start..."
                 waiter = self.aws.ec2c.get_waiter('instance_running')
-                waiter.wait()
+                waiter.wait(InstanceIds=[self.id,])
             self.refresh()
+            return True
+        else:
+            return False
 
     def stop(self, comment=None, wait=False):
         """
@@ -411,8 +415,27 @@ class EC2Instance(object):
             if wait and state['Name'] == 'stopping':
                 print "Waiting for instance to stop..."
                 waiter = self.aws.ec2c.get_waiter('instance_stopped')
-                waiter.wait()
+                waiter.wait(InstanceIds=[self.id,])
             self.refresh()
+            return True
+        else:
+            return False
+
+    def destroy(self, comment=None, wait=False):
+        """
+        Stop and Terminate this instance.
+        """
+        resp = self.aws.ec2c.terminate_instances(InstanceIds=[self.id,])
+        if resp['TerminatingInstances']:
+            state = resp['TerminatingInstances'][0]['CurrentState']
+            if wait:
+                print "Waiting for instance to terminate..."
+                waiter = self.aws.ec2c.get_waiter('instance_terminated')
+                waiter.wait(InstanceIds=[self.id,])
+            self.refresh()
+            return True
+        else:
+            return False
 
     @property
     def volumes(self):
@@ -669,12 +692,12 @@ class Instances(object):
             print "Waiting for ECS Instance to become available..."
             instance = None
             while not instance:
+                time.sleep(20)
                 self.refresh()
                 instance = self.get(id=iid)
-                if instance:
-                    instance.onLaunchInit()
-                    return instance
-                time.sleep(10)
+            if instance:
+                instance.onLaunchInit()
+                return instance
 
     def getTemplate(self, name):
         response = self.aws.ec2c.describe_launch_templates(LaunchTemplateNames=[name,])
@@ -931,7 +954,8 @@ class Volumes(object):
         Create a new Volume in this Cluster.
         """
         if volType == 'io1':
-            iops = size * 50
+            #iops = size * 50
+            iops = 3500
         else:
             iops = None
         TagSpecification = {'ResourceType': 'volume', 'Tags': [
@@ -1094,6 +1118,7 @@ class AWS(object):
     __ssm = None
     __r53c = None
     __sns = None
+    __s3c = None
 
     # Tasks running in the cluster
     __tasks = None
@@ -1132,6 +1157,12 @@ class AWS(object):
         if not self.__sns:
             self.__sns = self.session.client('sns')
         return self.__sns
+
+    @property
+    def s3c(self):
+        if not self.__s3c:
+            self.__s3c = self.session.client('s3')
+        return self.__s3c
 
     @property
     def ec2c(self):
@@ -1489,7 +1520,7 @@ class AWS(object):
             group = taskset
         else:
             group = taskset.name
-        self._runTask(
+        return self._runTask(
             taskdef.name, 
             taskdef.task_definition,
             taskdef.container_name,
@@ -1580,7 +1611,15 @@ class AWS(object):
         #
         if wait and tasks:
             waiter = self.ecs.get_waiter('tasks_running')
-            waiter.wait(cluster=self.cluster.name, tasks=[ t.id for t in tasks ])
+            try:
+                waiter.wait(
+                    cluster=self.cluster.name, 
+                    tasks=[ t.id for t in tasks ],
+                    WaiterConfig={'Delay': 10, 'MaxAttempts': 60,},
+                )
+            except exceptions.WaiterError, exc:
+                print exc.last_response
+                return None, exc.last_response
             for task in tasks:
                 task.refresh()
             #if task.hostports:

@@ -4,9 +4,11 @@ This script is for running the Griffith Backdated Usage imports.
 
 import aws
 import cluster
+from s3 import S3
 import time
 
 from mx import DateTime
+from botocore import exceptions
 
 
 def createVolume(api, date, avZone, logger=None):
@@ -37,6 +39,29 @@ def runInstance(api, date, avZone, volume, logger=None):
     volume.persistent = False
     return inst
 
+def waitOnTasks(api, tasks, delay=15, attempts=100):
+    print "Waiting for tasks to start."
+    waiter = api.ecs.get_waiter('tasks_running')
+    tries = 1
+    while tries <= 3:
+        try:
+            waiter.wait(
+                cluster=api.cluster.name,
+                tasks=[ t.id for t in tasks ],
+                WaiterConfig={'Delay': delay, 'MaxAttempts': attempts,},
+            )
+        except exceptions.WaiterError, exc:
+            if exc.last_response['failures']:
+                print "There was a failure starting tasks: %s" % exc.last_response['failures']
+                return False
+            else:
+                print "Tasks did not start, waiting longer..."
+                tries += 1
+        else:
+            return True
+    print "Still didn't get things running."
+    return False
+
 def runTasks(api, instance, date, logger=None):
     """
     Run the tasks required to process the days data.
@@ -49,9 +74,19 @@ def runTasks(api, instance, date, logger=None):
     dateStr = date.Format('%Y%m%d')
     groupStr = 'gu-%s' % dateStr
     api.cluster.args['processDate'] = dateStr
-    api.runTask('overseer', taskset=groupStr, instance=instance, wait=True)
-    api.runTask('jetdb', taskset=groupStr, instance=instance, wait=True)
-    api.runTask('processor', taskset=groupStr, instance=instance, wait=True)
+    tasks, fails = api.runTask('overseer', taskset=groupStr, instance=instance, wait=False)
+    result = waitOnTasks(api, tasks, delay=30, attempts=20) 
+    if not result:
+        return False
+    tasks, fails = api.runTask('jetdb', taskset=groupStr, instance=instance, wait=False)
+    result = waitOnTasks(api, tasks, delay=30, attempts=20) 
+    if not result:
+        return False
+    tasks, fails = api.runTask('processor', taskset=groupStr, instance=instance, wait=False)
+    result = waitOnTasks(api, tasks, delay=30, attempts=20) 
+    if not result:
+        return False
+    return True
 
 def setupInstance(api, date, avZone, logger=None):
     """
@@ -128,14 +163,18 @@ def process(api, staDate, endDate=None):
                 break
             else:
                 continue
+        log("Starting tasks on instance (%s) IP: %s in %s", instance.id, instance.ec2.private_ip_address, zones[idx])
+        if runTasks(api, instance, this, logger=log):
+            log("All tasks started without error..")
+            this += DateTime.oneDay
+        else:
+            log("There wa was a failure starting tasks, destroying.")
+            instance.ec2.destroy()
+        log.send()
         fails = 0
         idx += 1
         if idx >= len(zones):
             idx = 0
-        log("Starting tasks on instance (%s) IP: %s in %s", instance.id, instance.ec2.private_ip_address, zones[idx])
-        runTasks(api, instance, this, logger=log)
-        this += DateTime.oneDay
-        log.send()
     log.send()
 
 def getFrank():
@@ -151,6 +190,22 @@ def test(api):
     instance = runInstance(api, date, avZone, volume)
     api.runTask('overseer',taskset='gu-%s' % dateStr,instance=instance,wait=True)
     api.runTask('jetdb',taskset='gu-%s' % dateStr,instance=instance,wait=True)
+
+def getExportUserList(api):
+    """
+    Look in S3 for users with exported data.
+    """
+    s3 = S3(api)
+    userList = s3.list_dir('obsidian-cluster-share', 'griffith/exports/')
+    userList.update(s3.list_dir('obsidian-cluster-share', 'griffith/exports_v2/'))
+    userList.discard('00-Global')
+    print "Got %d users with export data." % len(userList)
+    with open('all_usernames_in_export.txt', 'w') as fh:
+        userListV2 = list(userList)
+        userListV2.sort()
+        for un in userListV2:
+            fh.write('%s\n' % un)
+    print "..done"
 
 
 if __name__ == "__main__":
