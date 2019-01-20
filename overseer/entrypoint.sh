@@ -8,7 +8,10 @@ fi
 python /opt/overseer/broadcaster.py &
 python /opt/overseer/main.py --reload &
 
-while true; do
-    sleep 5
-done
-
+term_handler() {
+    echo "Interupted by TERM" 
+    exit 0;
+}
+trap 'term_handler' SIGTERM
+(while true; do sleep 1000; done) & wait
+exit 0

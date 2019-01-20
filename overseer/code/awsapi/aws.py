@@ -5,6 +5,7 @@ This module provides Amazon Integration for the Jet Cluster.
 import boto3
 import os
 import time
+from pprint import pprint
 
 import common
 from cluster import Cluster
@@ -1092,6 +1093,7 @@ class AWS(object):
     __sd = None
     __ssm = None
     __r53c = None
+    __sns = None
 
     # Tasks running in the cluster
     __tasks = None
@@ -1124,6 +1126,12 @@ class AWS(object):
         if not self.__session:
             self.__session = boto3.session.Session(region_name=self.cluster.region)
         return self.__session
+
+    @property
+    def sns(self):
+        if not self.__sns:
+            self.__sns = self.session.client('sns')
+        return self.__sns
 
     @property
     def ec2c(self):

@@ -229,6 +229,33 @@ class AWSAPI(object):
         # Could probably store the CapacityUnits.
         return result.get('Item')
 
+    def getTaskByHostname(self, hostname, instanceId=None, status='running'):
+        """
+        """
+        keycond = filterexp = ''
+        if instanceId:
+            keycond = Key('InstanceId').eq(instanceId)
+            if status and status != 'all':
+                keycond &= Key('CurrentStatus').eq(status)
+            filterexp = Attr('Hostname').eq(hostname)
+            response = self.table.query(
+                IndexName='TasksByInstanceStatus', 
+                KeyConditionExpression=keycond,
+                FilterExpression=filterexp,
+            )
+        else:
+            filterexp = Attr('Hostname').eq(hostname)
+            if status:
+                filterexp &= Attr('CurrentStatus').eq(status)
+            else:
+                filterexp &= Attr('CurrentStatus').ne('terminated')
+            response = self.table.scan(
+                IndexName='TasksByInstanceStatus', FilterExpression=filterexp,
+            )
+        app_log.info("getTaskByHostname.response: %s" % response)
+        # TODO: store the capacity units consumed.
+        return response.get('Items', [])
+
     def getService(self, serviceName, instanceId=None, status='running'):
         """
         Get a list of tasks running the requested service. Optionally limit to
@@ -378,7 +405,10 @@ class ServicesListHandler(AWSBase):
         Return a list of existing services.
         """
         status = self.get_argument('status', None)
-        services = self.api.listServices(status=status)
+        instanceId = self.get_argument('InstanceId', None)
+        if instanceId == 'this':
+            instanceId = self.api.instanceId
+        services = self.api.listServices(instanceId=instanceId, status=status)
         response = {
             'metadata': {'status': 200,},
             'services': services,
@@ -415,6 +445,41 @@ class GetServiceHandler(AWSBase):
         self.write(JSONEncoder().encode(response))
 
 
+class GetTaskByHostHandler(AWSBase):
+    """
+    Request a specific task based on its hostname.
+    """
+    def get(self):
+        hostname = self.get_argument('Hostname')
+        instanceId = self.get_argument('InstanceId', self.api.instanceId)
+        tasks = self.api.getTaskByHostname(serviceName, instanceId)
+        response = {
+            'metadata': {'status': 200,},
+            'tasks': tasks,
+            'count': len(tasks),
+        }
+        self.write(JSONEncoder().encode(response))
+
+
+class ShutdownHandler(AWSBase):
+    """
+    Shutdown all running containers on this Node/Instance.
+    """
+    def get(self):
+        instanceId = self.get_argument('InstanceId', None) or self.api.instanceId
+        ec2 = self.session.client('ec2')
+        response = ec2.describe_tags(Filters=[
+            {'Name': 'resource-type', 'Values': ['instance',]},
+            {'Name': 'resource-id', 'Values': [instanceId,]},
+            {'Name': 'key', 'Values': ['Cluster-Name',]},
+        ])
+        clusterName = response['Tags'][0]['Value']
+        ecs = self.session.client('esc')
+        response = ecs.list_tasks(
+            cluster=clusterName, containerInstance=instanceId,
+        )
+        
+
 def getHandlers():
     """
     Return the handlers provided by this module.
@@ -426,5 +491,7 @@ def getHandlers():
         (r'/services/status', StatusHandler, dict(awsapi=awsapi)),
         (r'/services/list', ServicesListHandler, dict(awsapi=awsapi)),
         (r'/services/get', GetServiceHandler, dict(awsapi=awsapi)),
+        (r'/services/tasks', GetTaskByHostHandler, dict(awsapi=awsapi)),
+        (r'/services/shutdown', ShutdownHandler),
     ]
 

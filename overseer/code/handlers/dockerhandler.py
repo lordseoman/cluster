@@ -86,7 +86,6 @@ class ContainerInfoHandler(DockerBase):
         self.write(json.JSONEncoder().encode(response))
 
 
-
 def getHandlers():
     dockerapi = docker.DockerClient()
     return [

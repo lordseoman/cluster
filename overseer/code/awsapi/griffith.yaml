@@ -4,6 +4,9 @@ cluster:
     namespace: local
     region: us-east-1
 
+    limits:
+        instances: 85
+
     tasks:
         jetdb:
             task_definition: jet-mysql
@@ -47,12 +50,14 @@ cluster:
             environment: {}
             depends_on: []
 
-templates:
-    ec2:
-        GriffithProcessor:
-            instance_type: c5.4xlarge
-            subnet: private
-            tags:
-                Instance-Type: GriffithProcessor
-                ProcessDate: "%%Y%%m%%d"
+    templates:
+        ec2:
+            GriffithProcessor:
+                instance_type: c5.4xlarge
+                subnet: private
+                tags:
+                    Instance-Type: "GriffithProcessor"
+                    ProcessDate: "%(procDate)s"
+                    DBtarball: "db-griffith-clustered-imports-clean-20190113.tgz"
+                    Mount: "/dev/sdc:%(volname)s"
 

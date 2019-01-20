@@ -32,8 +32,10 @@
               loc.append('<tr class="' + cls  + '">'+
                 '<td class="taskid">'+element['TaskId']+'</td>'+
                 '<td>'+element['ServiceName']+'</td>'+
-                '<td>'+element['CurrentStatus']+'</td>'+
                 '<td>'+element['ContainerName']+'</td>'+
+                '<td>'+element['InstanceId']+'</td>'+
+                '<td>'+element['CurrentStatus']+'</td>'+
+                '<td>'+element['LastStatusChangedOn']+'</td>'+
                 '<td>'+element['Hostname']+'</td>'+
                 '<td>'+element['IP']+'</td>'+
                 '<td>'+element['Port']+'</td>'+
@@ -58,8 +60,10 @@
       <thead>
         <td>TaskId</td>
         <td>Service</td>
-        <td>Status</td>
         <td>Container</td>
+        <td>Instance</td>
+        <td>Status</td>
+        <td>Last Changed On</td>
         <td>Hostname</td>
         <td>IP</td>
         <td>Port</td>

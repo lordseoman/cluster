@@ -26,6 +26,15 @@ class DictMapper(object):
     def keys(self):
         return self.data.keys()
 
+    def items(self):
+        return self.data.items()
+
+    def dict(self, **kwargs):
+        _d = {}
+        for key, val in self.data.items():
+            _d[key] = val % kwargs
+        return _d
+
 
 class Wrapper(object):
     """
