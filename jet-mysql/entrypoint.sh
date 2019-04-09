@@ -11,11 +11,13 @@ fi
 
 /root/bin/registerService.py
 
-if [ -d /opt/patches/runContainer.sh ]; then
+if [ -e /opt/patches/runContainer.sh ]; then
     echo "Running dynamic update."
     chmod 755 /opt/patches/runContainer.sh
     /opt/patches/runContainer.sh
 fi
+
+/root/bin/on-boot.sh
 
 # Run the pre as this sets up the /opt/mysql => /opt/Database/XYZ
 /root/bin/setup-mysql-dbdir.sh

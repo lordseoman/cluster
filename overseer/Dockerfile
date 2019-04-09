@@ -1,7 +1,7 @@
 FROM python:2.7
 
 RUN apt-get update \
-  && apt-get install --yes --no-install-recommends vim jq screen
+  && apt-get install --yes --no-install-recommends vim jq screen mailutils
 
 RUN mkdir /usr/src/work
 COPY requirements.txt /usr/src/work/requirements.txt

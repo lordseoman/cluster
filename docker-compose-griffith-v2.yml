@@ -55,3 +55,16 @@ services:
     depends_on:
       - overseer
 
+  processor:
+    image: jet-processor:latest
+    hostname: processor
+    command: gu-imports
+    environment:
+      - SERVICE_NAME=processor
+      - TIMEZONE=Australia/Queensland
+    volumes:
+      - /opt/docker/Usage:/opt/Usage
+      - /opt/docker/patches:/opt/patches
+    depends_on:
+      - jetdb
+

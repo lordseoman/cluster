@@ -16,7 +16,7 @@ ENV NO_PROXY ''
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
-  && apt-get install --yes apt-utils vim less htop wget unzip curl locales net-tools screen tcpdump strace patch \
+  && apt-get install --yes apt-utils vim less htop wget unzip curl locales net-tools screen tcpdump strace patch mailutils \
   && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
   && /usr/sbin/locale-gen en_US.UTF-8 \
   && dpkg-reconfigure -f noninteractive locales \
